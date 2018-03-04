@@ -1,10 +1,6 @@
-eventlet
 Flask
 flask-login
-flask-moment
 flask-migrate
-flask-socketio
 flask-sqlalchemy
 Flask-WTF
-greenlet
 Werkzeug
