@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
+from flask_login import login_required
 
-bp = Blueprint('home', __name__, template_folder='templates')
+bp = Blueprint('main', __name__, template_folder='templates')
 
 @bp.route('/')
 @bp.route('/index')

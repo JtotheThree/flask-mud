@@ -1,4 +1,5 @@
 import os
+import datetime
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -6,38 +7,50 @@ from werkzeug.utils import find_modules, import_string
 
 from flask_mud import db
 from flask_mud.core.login import login_manager
+from flask_mud.core.sockets import socketio
 from flask_mud.util.db import import_all_models
 
 from config import Config
-
-db = SQLAlchemy()
-migrate = Migrate()
-
 
 def create_app():
     app = Flask('flask_mud')
     app.config.from_object(Config)
     app.config.from_pyfile('../instance/config.cfg')
 
-    register_blueprints(app)
     setup_db(app)
+    setup_models(app)
     setup_extensions(app)
+    register_handlers(app)
+    register_blueprints(app)
 
     return app
 
 
 def setup_db(app):
-    import flask_mud.models.user
-
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = False
 
     db.init_app(app)
 
 
+def setup_models(app):
+    import flask_mud.models.user
+
+    migrate = Migrate(app, db)
+
+
 def setup_extensions(app):
     login_manager.init_app(app)
-    migrate.init_app(app, db)
+    socketio.init_app(app)
+
+
+def register_handlers(app):
+    @app.shell_context_processor
+    def extend_shell_context():
+        ctx = {'db': db}
+        ctx.update(db.Model._decl_class_registry)
+        ctx.update((x, getattr(datetime, x)) for x in ('date', 'time', 'datetime', 'timedelta'))
+        return ctx
 
 
 def register_blueprints(app):
@@ -45,4 +58,4 @@ def register_blueprints(app):
     from flask_mud.blueprints.auth.auth import bp as auth_bp
 
     app.register_blueprint(main_bp)
-    # app.register_bluepritn(auth_bp)
+    app.register_blueprint(auth_bp)

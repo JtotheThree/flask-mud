@@ -106,3 +106,4 @@ Pipfile.lock
 
 # my shit
 instance/
+migrations/
