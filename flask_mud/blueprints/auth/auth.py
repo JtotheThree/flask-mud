@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, session
 from flask_login import current_user, login_user, logout_user, login_required
 
 from flask_mud.forms.auth import LoginForm, RegistrationForm
@@ -19,6 +19,7 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
+
         return redirect(url_for('main.index'))
     return render_template('login.html', title='Sign In', form=form)
 

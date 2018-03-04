@@ -2,6 +2,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
+    ASSETS_FOLDER = None
     SECRET_KEY = 'fuck1n-$h1t_w1zzz@rd$'
     DEBUG = True
     SQLALCHEMY_ECHO = True

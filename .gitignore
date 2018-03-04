@@ -108,3 +108,5 @@ Pipfile.lock
 instance/
 migrations/
 *.db
+package-lock.json
+node-modules/

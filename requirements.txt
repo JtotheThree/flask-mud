@@ -2,6 +2,7 @@ eventlet
 Flask
 flask-login
 flask-migrate
+flask-moment
 flask-socketio
 flask-sqlalchemy
 Flask-WTF
