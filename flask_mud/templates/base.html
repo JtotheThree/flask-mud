@@ -9,6 +9,7 @@
         <a href="{{ url_for('auth.login') }}">Login</a>
         <a href="{{ url_for('auth.register') }}">Register</a>
         {% else %}
+        <a href="{{ url_for('game.game') }}">Play</a>
         <a href="{{ url_for('auth.logout') }}">Logout</a>
         {% endif %}
     </div>

@@ -56,6 +56,8 @@ def register_handlers(app):
 def register_blueprints(app):
     from flask_mud.blueprints.main.main import bp as main_bp
     from flask_mud.blueprints.auth.auth import bp as auth_bp
+    from flask_mud.blueprints.game.game import bp as game_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(game_bp)
