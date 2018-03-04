@@ -41,6 +41,8 @@ def setup_extensions(app):
 
 
 def register_blueprints(app):
-    from flask_mud.views.home import bp as home_bp
+    from flask_mud.blueprints.main.main import bp as main_bp
+    from flask_mud.blueprints.auth.auth import bp as auth_bp
 
-    app.register_blueprint(home_bp)
+    app.register_blueprint(main_bp)
+    # app.register_bluepritn(auth_bp)
