@@ -5,6 +5,7 @@ from flask_mud.blueprints.game import events
 
 bp = Blueprint('game', __name__, template_folder='templates')
 
+
 @bp.route('/game')
 @login_required
 def game():

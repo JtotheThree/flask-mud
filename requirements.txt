@@ -3,6 +3,7 @@ Flask
 flask-login
 flask-migrate
 flask-moment
+flask-restful
 flask-socketio
 flask-sqlalchemy
 Flask-WTF

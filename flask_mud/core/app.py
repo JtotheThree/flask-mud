@@ -2,16 +2,15 @@ import os
 import datetime
 from flask import Flask
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.utils import find_modules, import_string
 
 from flask_mud import db
 from flask_mud.core.login import login_manager
 from flask_mud.core.moment import moment
+from flask_mud.core.api import api
 from flask_mud.core.sockets import socketio
-from flask_mud.util.db import import_all_models
 
 from config import Config
+
 
 def create_app():
     app = Flask('flask_mud')
@@ -22,16 +21,18 @@ def create_app():
     setup_extensions(app)
     register_handlers(app)
     register_blueprints(app)
+    register_resources(app)
 
     return app
 
 
 def load_config(app):
     app.config.from_object(Config)
-    app.config.from_pyfile('../instance/config.cfg')
+    # app.config.from_pyfile('../instance/config.cfg')
 
     if not app.config['ASSETS_FOLDER']:
-        app.config['ASSETS_FOLDER'] = os.path.join(app.root_path, 'static', 'assets')
+        app.config['ASSETS_FOLDER'] = os.path.join(
+            app.root_path, 'static', 'assets')
 
 
 def setup_db(app):
@@ -43,6 +44,7 @@ def setup_db(app):
 
 def setup_models(app):
     import flask_mud.models.user
+    import flask_mud.models.room
 
     migrate = Migrate(app, db)
 
@@ -58,7 +60,8 @@ def register_handlers(app):
     def extend_shell_context():
         ctx = {'db': db}
         ctx.update(db.Model._decl_class_registry)
-        ctx.update((x, getattr(datetime, x)) for x in ('date', 'time', 'datetime', 'timedelta'))
+        ctx.update((x, getattr(datetime, x))
+                   for x in ('date', 'time', 'datetime', 'timedelta'))
         return ctx
 
 
@@ -66,7 +69,21 @@ def register_blueprints(app):
     from flask_mud.blueprints.main.main import bp as main_bp
     from flask_mud.blueprints.auth.auth import bp as auth_bp
     from flask_mud.blueprints.game.game import bp as game_bp
+    from flask_mud.blueprints.design.design import bp as design_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(game_bp)
+    app.register_blueprint(design_bp)
+
+
+def register_resources(app):
+    from flask_mud.models.user import UserResource, UserListResource
+    from flask_mud.models.room import RoomResource, RoomListResource
+
+    api.add_resource(UserResource, '/api/user/<string:id>', endpoint='user')
+    api.add_resource(UserListResource, '/api/users')
+    api.add_resource(RoomResource, '/api/room/<string:id>', endpoint='room')
+    api.add_resource(RoomListResource, '/api/rooms')
+
+    api.init_app(app)

@@ -1,30 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<style>
+#message-box {
+    height: 30%;
+    overflow-y: scroll;
+}
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#messages li {
+    padding: 5px 10px;
+}
+
+#messages li.event {
+    font-style: italic;
+}
+</style>
+
 <script type="text/javascript" charset="utf-8">
     var socket;
     $(document).ready(function() {
         socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+
         socket.on('connect', function() {
             socket.emit('joined', {});
         });
+
         socket.on('status', function(data) {
-            $('#chat').append('<p>' + data.msg + '</p>');
-            $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            //$('#chat').append('<p>' + data.msg + '</p>');
+            //$('#chat').scrollTop($('#chat')[0].scrollHeight);
         });
+
         socket.on('message', function(data) {
-            $('#chat').append('<p>' + data.msg + '</p>');
-            $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            $('#messages').append($('<li>').text(data.msg));
+            $('#message-box').scrollTop($('#message-box')[0].scrollHeight);
         });
+
         $('#text').keypress(function(e) {
             var code = e.keyCode || e.which;
             if (code == 13) {
                 text = $('#text').val();
                 $('#text').val('');
-                socket.emit('text', {msg: text});
+                socket.emit('message', {msg: text});
             }
         });
     });
+
     function leave_room() {
         socket.emit('left', {}, function() {
             socket.disconnect();
@@ -37,9 +64,10 @@
 
 <body>
     <h1>Chat: {{ room }}</h1>
-    <div style="height:400px;max-height:400px;overflow-y:scroll;"><span id="chat"/></div><br><br>
+    <div id="message-box">
+        <u1 id="messages"></u1>
+    </div>
     <input id="text" size="80" placeholder="Enter your message here"><br><br>
     <a href="#" onclick="leave_room();">Leave this room</a>
 </body>
-
 {% endblock %}

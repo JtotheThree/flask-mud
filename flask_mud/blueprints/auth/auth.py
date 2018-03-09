@@ -8,6 +8,7 @@ from flask_mud import db
 
 bp = Blueprint('auth', __name__, template_folder='templates')
 
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -23,10 +24,12 @@ def login():
         return redirect(url_for('main.index'))
     return render_template('login.html', title='Sign In', form=form)
 
+
 @bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
