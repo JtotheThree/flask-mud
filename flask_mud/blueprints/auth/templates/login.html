@@ -3,19 +3,36 @@
 {% block content %}
 <div class="container">
 <h1>Sign In</h1>
-<p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p><br>
+<p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
 <form action="" method="post">
     {{ form.hidden_tag() }}
 
-    {{ form.username.label }}<br>
-    {{ form.username(size=32) }}<br>
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ form.username(size=32) }}
+        </div>
+    </div>
 
-    {{ form.password.label }}<br>
-    {{ form.password(size=32) }}<br>
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(size=32) }}
+        </div>
+    </div>
 
-    {{ form.remember_me() }} {{ form.remember_me.label }}<br>
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.remember_me() }}
+            {{ form.remember_me.label }}
+        </div>
+    </div>
 
-    {{ form.submit () }}
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.submit(class='btn btn-primary') }}
+        </div>
+    </div>
 </form>
 </div>
 {% endblock %}

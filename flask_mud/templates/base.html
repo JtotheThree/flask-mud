@@ -19,12 +19,31 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-light">
-        <ul class="navbar-nav">
-            {% include "navlinks.html" %}
-        </ul>
-    </nav>
+    <div class="nav-side-menu">
+        <div class="brand">FLASK PNP</div>
+        <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+        <div class="menu-list">
+            <ul id="menu-content" class="menu-content collapse out">
+                {% include "navlinks.html" %}
+            </ul>
+        </div>
+    </div>
 
+    <!--<nav class="navbar navbar-expand-sm bg-light navbar-light">
+        <a class="navbar-brand" href="#">FLASK PNP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% include "navlinks.html" %}
+            </ul>
+        </div>
+    </nav>-->
+
+    <div class="container" id="main">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>
@@ -35,6 +54,7 @@
     {% endif %}
     {% endwith %}
     {% block content %}{% endblock %}
+    </div>
 </body>
 
 </html>

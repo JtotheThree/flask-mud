@@ -109,5 +109,5 @@ instance/
 migrations/
 *.db
 package-lock.json
-node-modules
+node_modules/
 .fusebox/
