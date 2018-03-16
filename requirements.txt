@@ -8,4 +8,7 @@ flask-socketio
 flask-sqlalchemy
 Flask-WTF
 greenlet
+Markdown
+psycopg2
 Werkzeug
+wtforms_html5

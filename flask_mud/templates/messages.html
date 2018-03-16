@@ -1,0 +1,14 @@
+{{ moment.include_moment() }}
+
+<ul id="messages">
+    {% if messages is not none %}
+    {% for message in messages %}
+
+        {% if message.author != 'server' %}
+            <span class="card-title"><strong>{{ message.author }}</strong>  <span style="font-size: 50%">{{ moment(message.timestamp).format('LTS') }}</span></span>
+        {% endif %}
+        <p>{{ message.content | markdown }}</p>
+
+    {% endfor %}
+    {% endif %}
+</ul>

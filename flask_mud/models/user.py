@@ -17,6 +17,13 @@ class User(UserMixin, db.Model):
 
     role = db.Column(db.Integer)
 
+    # Game stuff
+    room_id =db.Column(db.Integer, db.ForeignKey('room.id'))
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        self.role = 0
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 

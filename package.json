@@ -1,0 +1,30 @@
+{
+  "name": "flask-mud",
+  "version": "1.0.0",
+  "description": "A poorly named PnP mobile website.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently -n \"FUSE,FLASK\" -c \"bgBlue.bold,bgMagenta.bold\" \"node fuse.js\" \"npm run flask-server\"",
+    "flask-server": "FLASK_APP=run.py FLASK_DEBUG=1 flask run --with-threads"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JtotheThree/flask-mud.git"
+  },
+  "author": "John Mullins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JtotheThree/flask-mud/issues"
+  },
+  "homepage": "https://github.com/JtotheThree/flask-mud#readme",
+  "devDependencies": {
+    "@types/socket.io-client": "latest",
+    "bootstrap": "latest",
+    "concurrently": "^3.5.1",
+    "fuse-box": "latest",
+    "node-sass": "latest",
+    "jquery": "^3.3.1",
+    "socket.io-client": "^2.0.4",
+    "typescript": "latest"
+  }
+}

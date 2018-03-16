@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Create Room</h1>
+<form action="", method="post">
+    {{ form.hidden_tag() }}
+
+        {{ form.title.label }}<br>
+        {{ form.title }}<br>
+
+        {{ form.description.label }}<br>
+        {{ form.description }}<br>
+
+        {{ form.password_required.label }}<br>
+        {{ form.password_required }}<br>
+
+        {{ form.password.label }}<br>
+        {{ form.password }}<br>
+
+        {{ form.submit() }}
+</form>
+</div>
+
+<script>
+    document.getElementById('password').disabled = true;
+    document.getElementById('password_required').onchange = function() {
+        document.getElementById('password').disabled = !this.checked;
+    };
+</script>
+{% endblock %}

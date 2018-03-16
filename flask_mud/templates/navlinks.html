@@ -1,0 +1,29 @@
+<li class="nav-item">
+    <a href="{{ url_for('main.index') }}">Home</a>
+</li>
+
+{% if current_user.is_anonymous %}
+    <li class="nav-item">
+        <a class="nav-item" href="{{ url_for('auth.login') }}">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-item" href="{{ url_for('auth.register') }}">Register</a>
+    </li>
+{% else %}
+    <li class="nav-item">
+        <a class="nav-item" href="{{ url_for('user.characters') }}">Characters</a>
+    </li>
+    {% if request.url_rule.endpoint == 'play.play' %}
+        <li class="nav-item">
+            <a class="nav-item" href="{{ url_for('play.leave_room') }}">Leave</a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-item" href="{{ url_for('play.play') }}">Play</a>
+        </li>
+    {% endif %}
+
+    <li class="nav-item">
+        <a class="nav-item" href="{{ url_for('auth.logout') }}">Logout</a>
+    </li>
+{% endif %}
