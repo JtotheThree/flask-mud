@@ -6,13 +6,25 @@
 <form action="", method="post">
     {{ form.hidden_tag() }}
     
-    {{ form.room_list.label }}<br>
-    {{ form.room_list }}<br>
+    <div class="form-group">
+        {{ form.room_list.label }}
+        {{ form.room_list(class='form-control') }}
+        {% for error in form.room_list.errors %}
+        <small><span style="color: red;">{{ error }}</span></small>
+        {% endfor %}
+    </div>
 
-    {{ form.password.label }}<br>
-    {{ form.password(size=32) }}<br>
+    <div class="form-group">
+        {{ form.password.label }}
+        {{ form.password(class='form-control') }}
+        {% for error in form.password.errors %}
+        <small><span style="color: red;">{{ error }}</span></small>
+        {% endfor %}
+    </div>
 
-    {{ form.submit() }}
+    <div class="form-group">
+        {{ form.submit(class='btn btn-primary') }}
+    </div>
 </form>
 
 {% endblock %}

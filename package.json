@@ -21,6 +21,7 @@
     "@types/socket.io-client": "latest",
     "bootstrap": "latest",
     "concurrently": "^3.5.1",
+    "daemonite-material": "latest",
     "fuse-box": "latest",
     "node-sass": "latest",
     "jquery": "^3.3.1",

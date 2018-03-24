@@ -7,6 +7,11 @@ from flask_mud.models.message import Message
 
 from flask_mud.core.db import db
 
+players = db.Table('players',
+    db.Column('room_id', db.Integer, db.ForeignKey('room.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), index=True)
@@ -21,6 +26,10 @@ class Room(db.Model):
 
     messages = db.relationship('Message', backref='room', lazy='dynamic')
 
+    playing = db.relationship('User', secondary=players,
+        primaryjoin=(players.c.room_id == id),
+        backref=db.backref('players', lazy='dynamic'), lazy='dynamic')
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -30,6 +39,23 @@ class Room(db.Model):
     def messages(self):
         messages = Message.query.filter_by(room_id=self.id)
         return messages.order_by(Message.timestamp.asc())
+
+    def add_player(self, user):
+        if not self.is_playing(user):
+            self.playing.append(user)
+
+    def remove_player(self, user):
+        if self.is_playing(user):
+            self.playing.remove(user)
+
+    def is_playing(self, user):
+        from flask_mud.models.user import User
+        return self.playing.filter((players.c.room_id == self.id) & (players.c.user_id == user.id)).count() > 0
+
+    def get_players(self):
+        from flask_mud.models.user import User
+        return User.query.join(players).join(Room).filter((players.c.user_id == User.id) & (players.c.room_id == Room.id)).all()
+
 
 room_fields = {
     'id': fields.Integer,

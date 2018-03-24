@@ -1,29 +1,16 @@
-<li class="nav-item">
-    <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
-</li>
+<a class="nav-item nav-link" href="{{ url_for('main.index') }}"><i class="material-icons mr-3">home</i><strong>Home</strong></a>
 
 {% if current_user.is_anonymous %}
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
-    </li>
+    <a class="nav-item nav-link" href="{{ url_for('auth.login') }}"><i class="material-icons mr-3">lock_open</i><strong>Login</strong></a>
+    <a class="nav-item nav-link" href="{{ url_for('auth.register') }}"><i class="material-icons mr-3">account_box</i><strong>Register</strong></a>
 {% else %}
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('user.characters') }}">Characters</a>
-    </li>
+    <a class="nav-item nav-link" href="{{ url_for('user.characters') }}"><i class="material-icons mr-3">face</i><strong>Characters</strong></a>
+
     {% if request.url_rule.endpoint == 'play.play' %}
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('play.leave_room') }}">Leave</a>
-        </li>
+        <a class="nav-item nav-link" href="{{ url_for('play.leave_room') }}"><i class="material-icons mr-3">directions_run</i><strong>Leave</strong></a>
     {% else %}
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('play.play') }}">Play</a>
-        </li>
+        <a class="nav-item nav-link" href="{{ url_for('play.play') }}"><i class="material-icons mr-3">play_arrow</i><strong>Play</strong></a>
     {% endif %}
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
-    </li>
+    <a class="nav-item nav-link" href="{{ url_for('auth.logout') }}"><i class="material-icons mr-3">lock</i><strong>Logout</strong></a>
 {% endif %}

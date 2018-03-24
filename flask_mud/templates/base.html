@@ -2,59 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="initial-scale=1, shrink-to-fit=no, width=device-width" name="viewport">
     {% if title %}
     <title>{{ title }}</title>
     {% else %}
     <title>Flask PnP</title>
     {% endif %}
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script src="{{ url_for('static', filename='assets/app.js') }}"></script>
     {{ moment.include_moment() }}
 </head>
 
 <body>
-    <div class="nav-side-menu">
-        <div class="brand">FLASK PNP</div>
-        <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-        <div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
-                {% include "navlinks.html" %}
-            </ul>
-        </div>
-    </div>
-
-    <!--<nav class="navbar navbar-expand-sm bg-light navbar-light">
-        <a class="navbar-brand" href="#">FLASK PNP</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
-                aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-light doc-navbar fixed-top bg-primary" id="doc-navbar">
+        <button class="navbar-toggler d-lg-none" data-breakpoint="lg" data-target="#doc-navdrawer" data-toggle="navdrawer" data-type="permanent">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                {% include "navlinks.html" %}
-            </ul>
+        <div class="navdbar-header">
+            <a class="navbar-brand px-0" href="#">Flask PnP</a>
         </div>
-    </nav>-->
+        <!-- <a class="navbar-brand d-lg-none mr-auto" href="/material/">Flask PnP</a> -->
 
-    <div class="container" id="main">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
+        <div class="d-flex flex-row-reverse" style="margin-left: auto;">
+        {% block navbar %}{% endblock %}
+        </div>
+
+    </nav>
+
+    <div class="navdrawer navdrawer-permanent-lg navdrawer-permanent-clipped doc-navdrawer" id="doc-navdrawer" tabindex="-1">
+        <div class="navdrawer-content">
+            <nav class="navdrawer-nav">
+                {% include "navlinks.html" %}
+            </nav>
+        </div>
     </div>
+
+    <main class="content-wrapper">
+        {% block jumbotron %}{% endblock %}
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+        {% block play %}{% endblock %}
+    </main>
+
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='assets/material.min.js') }}"></script>
 
 </html>

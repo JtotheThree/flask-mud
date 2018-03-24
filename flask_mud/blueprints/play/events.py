@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import session, jsonify, redirect
 from flask_socketio import emit, join_room, leave_room
 from flask_mud.core.sockets import socketio
+from random import randint
 
 from flask_mud.models.user import User
 from flask_mud.models.room import Room
@@ -21,6 +22,13 @@ def client_connected(data):
 
     join_room(user.room_id)
 
+    print("****************************** {} joined".format(username))
+
+    user.online = True
+
+    db.session.commit()
+
+    emit('player_change', room=user.room_id)
     emit('refresh', room=user.room_id)
 
 
@@ -30,7 +38,14 @@ def client_text(data):
     user = User.query.filter_by(username=username).first()
 
     if data['text'][0] == "/":
-        print(data['text'])
+        if data['text'][0:5] == "/roll":
+            if data["text"][6:9] == "d20":
+                roll = randint(1, 20)
+                message = Message(author=username,
+                                  content="Roll Result ({}):: {}".format(data["text"][6:9], roll),
+                                  room_id=user.room_id)
+            db.session.add(message)
+            db.session.commit()
     else:
         message = Message(author=username, 
                           content=data['text'], 
@@ -47,4 +62,26 @@ def left(message):
     username = session.get('username')
     user = User.query.filter_by(username=username).first()
 
+    user.online = False
+
+    db.session.merge(user)
+    db.session.commit()
+
     leave_room(user.room_id)
+
+    emit('player_change', room=user.room_id)
+    emit('refresh', room=user.room_id)
+
+@socketio.on('disconnect', namespace='/play')
+def disconnect():
+    username = session.get('username')
+    print("============================ {} left".format(username))
+
+    user = User.query.filter_by(username=username).first()
+    user.online = False
+
+    db.session.merge(user)
+    db.session.commit()
+
+    emit('player_change', room=user.room_id)
+    emit('refresh', room=user.room_id)

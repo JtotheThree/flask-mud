@@ -6,6 +6,8 @@ from flask_restful import marshal_with, Resource, fields
 
 from flask_mud.core.db import db
 
+from flask_mud.models.room import players
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,11 +16,15 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
 
     created = db.Column(db.DateTime, default=datetime.utcnow)
+    online = db.Column(db.Boolean, default=False)
 
     role = db.Column(db.Integer)
 
     # Game stuff
     room_id =db.Column(db.Integer, db.ForeignKey('room.id'))
+    playing = db.relationship('Room', secondary=players,
+        primaryjoin=(players.c.user_id == id),
+        backref=db.backref('players', lazy='dynamic'), lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

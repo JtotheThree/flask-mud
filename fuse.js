@@ -6,7 +6,7 @@ const fuse = FuseBox.init({
     plugins: [
         [SassPlugin({
             importer: true, 
-            macros: {"@bootstrap": "node_modules/bootstrap/scss"}}), 
+            macros: {"@daemonite": "node_modules/daemonite-material/assets/scss/"}}), 
         CSSPlugin()],
         CSSPlugin()]
 })

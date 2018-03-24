@@ -7,7 +7,7 @@ export class Play {
     private self;
 
     constructor() {
-        this.socket = io.connect('http://' + document.domain + ':' + location.port + '/play');
+        this.socket = io.connect('http://' + document.domain + ':' + location.port + '/play', {'sync disconnect on unload': true});
 
         this.socket.on('connect', () => {
             this.on_connect();
@@ -15,10 +15,19 @@ export class Play {
         this.socket.on('refresh', () => {
             this.on_refresh();
         });
+        this.socket.on('player_change', () => {
+            this.on_player_change();
+        });
     }
 
     run() {
         let text = <HTMLElement>document.body.querySelector("#text");
+
+        $('#text-editor-submit').click(() => {
+            var inp = $('#text-editor-area').val;
+            $('#text-editor-area').val = '';
+            this.socket.emit('client_text', {text: inp});
+        });
 
         text.addEventListener('keypress', (e) => {
             var code = e.keyCode || e.which;
@@ -35,6 +44,7 @@ export class Play {
     }
 
     on_refresh() {
+        console.log("refreshed");
         $.ajax({
             url: "/messages",
             type: "get",
@@ -45,12 +55,35 @@ export class Play {
                 console.log(xhr);
             }
         }).done(function () {
-            $('#message-box').scrollTop($('#message-box')[0].scrollHeight);
+            $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+            //$('#message-box').scrollTop($('#message-box')[0].scrollHeight);
         });           
+    }
+
+    on_player_change() {
+        console.log("players changed");
+        $.ajax({
+            url: "/get_players",
+            type: "get",
+            success: function(response: string) {
+                $("#player-list").html(response);
+            },
+            error: function(xhr: string) {
+                console.log(xhr);
+            }
+        });
     }
 
     on_send() {
         console.log("HEYOOOOO");
+    }
+
+    on_text_editor_submit() {
+        let text = <HTMLElement>document.body.querySelector("#text-editor-area");
+
+        var inp = text.value;
+        text.value = '';
+        this.socket.emit('client_text', {text: inp});
     }
 
     leave_room() {

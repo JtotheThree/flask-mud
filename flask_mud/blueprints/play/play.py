@@ -48,6 +48,10 @@ def rooms():
 
         user = User.query.filter_by(username=current_user.username).first()
         user.room_id = room.id
+
+        room = Room.query.filter_by(id=room.id).first()
+        room.add_player(user)
+
         db.session.commit()
 
         return redirect(url_for('play.play'))
@@ -81,8 +85,14 @@ def create_room():
 @login_required
 def leave_room():
     user = User.query.filter_by(username=current_user.username).first()
+
+    room = Room.query.filter_by(id=user.room_id).first()
+    room.remove_player(user)
+
     user.room_id = None
+
     db.session.commit()
+
     return redirect(url_for('main.index'))
 
 @bp.route('/messages')
@@ -92,3 +102,15 @@ def messages():
     room = Room.query.filter_by(id=user.room_id).first()
     messages = room.messages()
     return render_template('messages.html', messages=messages)
+
+@bp.route('/get_players')
+@login_required
+def get_players():
+    username = session.get('username')
+    user = User.query.filter_by(username=username).first()
+    room = Room.query.filter_by(id=user.room_id).first()
+
+    players = room.get_players()
+
+    return render_template('player_list.html', players=players)
+    #user = user.query.filter_by(username=current_user.username).first()

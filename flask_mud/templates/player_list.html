@@ -1,0 +1,6 @@
+{% if players is not none %}
+{% for player in players %}
+<a class="dropdown-item" href="#"><strong>{{ player.username }}</strong>
+{% if player.online %}<small>online</small>{% endif %} </a>
+{% endfor %}
+{% endif %}
