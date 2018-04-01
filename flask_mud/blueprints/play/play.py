@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, render_template, session, redirect, url_for, flash
 from flask_login import login_required, current_user
+import json
 
 from flask_mud.blueprints.play import events
 from flask_mud.models.user import User
@@ -100,7 +101,11 @@ def leave_room():
 def messages():
     user = User.query.filter_by(username=current_user.username).first()
     room = Room.query.filter_by(id=user.room_id).first()
-    messages = room.messages()
+    messages = list(room.messages())
+
+    for message in messages:
+        message.content = json.loads(message.content)
+
     return render_template('messages.html', messages=messages)
 
 @bp.route('/get_players')

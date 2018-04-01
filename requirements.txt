@@ -10,5 +10,6 @@ Flask-WTF
 greenlet
 Markdown
 psycopg2
+spacy
 Werkzeug
 wtforms_html5

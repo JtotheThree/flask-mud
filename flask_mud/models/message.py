@@ -1,19 +1,22 @@
 from datetime import datetime
 from flask_restful import marshal_with, Resource, fields
+from sqlalchemy.dialects.postgresql.json import JSONB
 
 from flask_mud.core.db import db
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String, index=True, default="message")
     author = db.Column(db.String(64), index=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    content = db.Column(db.String(1024))
+    content = db.Column(JSONB)
 
     room_id = db.Column(db.Integer, db.ForeignKey('room.id'))
 
 
 message_fields = {
     'id': fields.Integer,
+    'category': fields.String,
     'author': fields.String,
     'timestamp': fields.DateTime,
     'content': fields.String,

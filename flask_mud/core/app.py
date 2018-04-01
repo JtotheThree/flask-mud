@@ -10,6 +10,7 @@ from flask_mud.core.api import api
 from flask_mud.core.cli import gulp_command
 from flask_mud.core.sockets import socketio
 from flask_mud.core.filters import markdown_filter
+from flask_mud.core.nlp import nlp
 
 from config import Config
 
@@ -48,6 +49,7 @@ def setup_db(app):
 
 def setup_models(app):
     import flask_mud.models.user
+    import flask_mud.models.character
     import flask_mud.models.room
     import flask_mud.models.message
 

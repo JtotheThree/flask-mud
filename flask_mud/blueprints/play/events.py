@@ -2,7 +2,9 @@ from datetime import datetime
 from flask import session, jsonify, redirect
 from flask_socketio import emit, join_room, leave_room
 from flask_mud.core.sockets import socketio
+from flask_mud.core.nlp import nlp
 from random import randint
+import json
 
 from flask_mud.models.user import User
 from flask_mud.models.room import Room
@@ -41,18 +43,30 @@ def client_text(data):
         if data['text'][0:5] == "/roll":
             if data["text"][6:9] == "d20":
                 roll = randint(1, 20)
-                message = Message(author=username,
-                                  content="Roll Result ({}):: {}".format(data["text"][6:9], roll),
-                                  room_id=user.room_id)
-            db.session.add(message)
-            db.session.commit()
-    else:
-        message = Message(author=username, 
-                          content=data['text'], 
-                          room_id=user.room_id)
 
-        db.session.add(message)
-        db.session.commit()
+                category = "roll"
+                content = {'dice': 'd20', 'result': str(roll)}
+    else:
+        category = "message"
+        msg_nlp = nlp(data['text'])
+
+        for sentence in msg_nlp.sents:
+            action = [w.text for w in sentence if w.dep_ in ('xcomp', 'ccomp')]
+            #who = [w for w in sentence if w.dep_ == 'nsubj']
+            #obj = [w for w in sentence if w.dep_ in ('dobj')]
+                
+            #pobj = [w for w in action[0].children if w.dep_ == 'pobj']
+
+            content = {'msg': data['text'], 'action': action}
+
+
+    message = Message(author=username,
+                      category=category,
+                      content=json.dumps(content), 
+                      room_id=user.room_id)
+
+    db.session.add(message)
+    db.session.commit()
 
     emit('refresh', room=user.room_id)
 
